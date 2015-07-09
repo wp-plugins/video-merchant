@@ -1,0 +1,294 @@
+/**
+ * @package Video Merchant
+ * @version 5.0.1
+ * @author Video Merchant <info@MyVideoMerchant.com>
+ * @copyright (C) Copyright 2015 Video Merchant, MyVideoMerchant.com. All rights reserved.
+ * @license GNU/GPL http://www.gnu.org/licenses/gpl-3.0.txt
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#video_merchant_main_tabs {
+	margin: auto;
+}
+
+#video_inventory_table_filter {
+	display: inline-block;
+	margin-bottom: 7px;
+}
+
+#video_inventory_table_paginate {
+	display: inline-block;
+	margin-top: 4px;
+}
+
+#add_video_btn, 
+#create_html_player_widget_btn {
+	float: right;
+}
+
+input.text { width:95%; padding: .4em; }
+input.text2 { padding: .4em; }
+fieldset { padding:0; border:0; margin-top: 5px; }
+h1 { font-size: 1.2em; margin: .6em 0; }
+.ui-dialog .ui-state-error { padding: .3em; }
+.validateTips { border: 1px solid transparent; padding: 0.3em; }
+
+.big_or {
+	display: block;
+	text-align: center;
+	font-weight: bold;
+	font-size: 1.2em;
+	margin: 5px 0 5px 0;
+}
+
+.hidden {
+	display: none !important;
+}
+
+.hide2 {
+	visibility: hidden !important;
+}
+
+.small_url_container {
+	margin: 0 20px 0 0; 
+	float: right;
+	font-size: 0.8em;
+}
+
+.small_url_container a {
+	display: inline-block;
+	text-decoration: none;
+	color: #359ECF !important;
+}
+
+.small_url_container a:hover {
+	text-decoration: none;
+	color: #1D6789 !important;
+}
+
+.last_small_url::before { 
+    content: '| ';
+	color: black !important;
+}
+
+.existing_file_scroller {
+	display: inline-block;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	margin: 5px 0;
+	white-space: nowrap;
+	width: 500px;
+}
+
+.existing_file_scroller input[type="radio"],
+.existing_file_scroller input[type="checkbox"] {
+	margin-right: 2px !important;
+}
+
+.existing_file_scroller span {
+	display: inline-block;
+	margin-right: 10px;
+	font-size: 0.8em;
+	width: 70px;
+	word-wrap: break-word;
+	overflow: hidden;
+}
+
+.existing_file_scroller span a {
+	text-decoration: none;
+}
+
+.existing_file_scroller span a:hover {
+	text-decoration: underline;
+}
+
+.existing_file_scroller, .existing_file_scroller * {
+	vertical-align: top;
+}
+
+.warning_msg {
+	color: red;
+	font-style: italic;
+	font-size: 0.98em;
+	display: block;
+	width: auto !important;
+}
+
+.upload_file_wrapper {
+	display: block;
+	margin-bottom: 13px;
+}
+
+.no-bottom-margin {
+	margin-bottom: 0px !important;
+}
+
+.error_msg {
+	color: red;
+	font-weight: 500;
+}
+
+#success_msg_wrapper p,
+#success_msg_wrapper2 p {
+	color: green;
+	font-weight: 500;
+}
+
+#video_inventory_table a {
+	text-decoration: none;
+}
+
+#video_inventory_table a:hover {
+	text-decoration: underline;
+}
+
+.preview_link {
+	color: #7A7171 !important;
+	font-size: 0.94em !important;
+}
+
+#my_video_tab,
+#html_player_tab {
+	padding: 0.3em;
+}
+
+
+#settings_tab label {
+	display: inline-block;
+	width: 30%;
+	text-align: right;
+}
+
+#new_video_file_form input[type="radio"],
+#html_widget_form input[type="checkbox"] {
+  margin-top: -1px;
+  vertical-align: middle;
+}
+
+
+.vertical_video_scroller {
+	display: inline-block;
+	width: 97%;
+	height: 250px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	margin: 5px 0 0 20px;
+	padding: 0;
+	list-style-type: none;
+}
+
+.vertical_video_scroller li {
+	padding: 3px 0;
+	margin: 0 0 5px 0;
+	list-style-type: none;
+}
+
+.vertical_video_scroller a {
+	text-decoration: none;
+}
+
+.vertical_video_scroller a:hover {
+	text-decoration: underline;
+}
+
+.vertical_video_scroller li,
+.vertical_video_scroller li * {
+	vertical-align: middle;
+}
+
+#html_widget_form blockquote {
+	margin: 1.2em 1.4em 0.5em 1.4em;
+}
+
+.unselect_all {
+	display: none;
+}
+
+a.select_all, a.unselect_all {
+	text-decoration: none;
+}
+
+a.select_all:hover, a.unselect_all:hover {
+	text-decoration: underline;
+}
+
+#share_dialog_content {
+	width: 540px;
+	height: 90px;
+}
+
+#css_frontend {
+	width: 734px;
+	height: 350px;
+}
+
+#css_frontend_label {
+	vertical-align: top;
+	line-height: 350px;
+}
+
+.use_default_link {
+	display: inline-block;
+	margin: 0 0 0 620px;
+	font-size: 0.9em;
+	text-decoration: none;
+}
+
+a.use_default_link:hover {
+	text-decoration: underline;
+}
+
+.default_submit_button {
+	position: absolute;
+	top: -1000px;
+}
+
+.select_all_container {
+	display: inline-block; 
+	float: right; 
+	font-size: 0.9em;
+}
+
+.small_grey {
+	font-size: 0.9em; 
+	color: grey;
+}
+
+.float_right {
+	float: right;
+}
+
+.ui-tooltip {
+	padding:8px;
+	position:absolute;
+	z-index:9999;
+	-o-box-shadow: 0 0 5px #aaa;
+	-moz-box-shadow: 0 0 5px #aaa;
+	-webkit-box-shadow: 0 0 5px #aaa;
+	box-shadow: 0 0 5px #aaa;
+	background-image: none;
+	border-width: 2px;
+	max-width: 300px;
+}
+
+label[for="video_exclusive_price"], 
+.video_exclusive_price_tip {
+	display: none;
+}
+
+.ui-icon-closethick {
+	top: 0% !important;
+	left: 0% !important;
+}
