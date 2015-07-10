@@ -8,7 +8,7 @@ Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Sell or showcase your video directly to your listeners with this versatile HTML5 video player.
+Sell or showcase your video directly to your viewers with this versatile HTML5 video player.
 
 == Description ==
 
