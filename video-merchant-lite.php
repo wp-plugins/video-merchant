@@ -3,7 +3,7 @@
  * Plugin Name: Video Merchant Lite
  * Plugin URI: http://www.MyVideoMerchant.com
  * Description: Plugin that allows you to sell/showcase your videos with built-in HTML5 player.
- * Version: 5.0.1
+ * Version: 5.0.2
  * Author: Video Merchant
  * Author URI: http://www.MyVideoMerchant.com
  * Text Domain: video-merchant
@@ -11,7 +11,7 @@
  */
 /**
  * @package Video Merchant
- * @version 5.0.1
+ * @version 5.0.2
  * @author Video Merchant <info@MyVideoMerchant.com>
  * @copyright (C) Copyright 2015 Video Merchant, MyVideoMerchant.com. All rights reserved.
  * @license GNU/GPL http://www.gnu.org/licenses/gpl-3.0.txt

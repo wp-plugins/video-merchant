@@ -3,7 +3,7 @@
  * Plugin Name: Video Merchant Lite
  * Plugin URI: http://www.MyVideoMerchant.com
  * Description: Plugin that allows you to sell/showcase your videos with built-in HTML5 player.
- * Version: 5.0.1
+ * Version: 5.0.2
  * Author: Video Merchant
  * Author URI: http://www.MyVideoMerchant.com
  * Text Domain: video-merchant
@@ -11,7 +11,7 @@
  */
 /**
  * @package Video Merchant
- * @version 5.0.1
+ * @version 5.0.2
  * @author Video Merchant <info@MyVideoMerchant.com>
  * @copyright (C) Copyright 2015 Video Merchant, MyVideoMerchant.com. All rights reserved.
  * @license GNU/GPL http://www.gnu.org/licenses/gpl-3.0.txt
@@ -74,11 +74,23 @@ add_action('wp_ajax_nopriv_video_merchant_download', 'video_merchant_download_fr
 add_action('wp_ajax_video_merchant_check_order_status', 'video_merchant_check_order_status');
 add_action('wp_ajax_nopriv_video_merchant_check_order_status', 'video_merchant_check_order_status');
 
+$video_merchant_db_version = '5.0.2';
+
+function video_merchant_db_check() 
+{
+    global $video_merchant_db_version;
+	
+    if (get_option('video_merchant_db_version') != $video_merchant_db_version) 
+	{
+        video_merchant_db_install();
+    }
+}
+
+add_action('plugins_loaded', 'video_merchant_db_check');
+
 function video_merchant_db_install() 
 {
-	global $wpdb;
-	
-	require_once ABSPATH.'wp-admin/includes/upgrade.php';
+	global $wpdb, $video_merchant_db_version;
 	
 	$sql = "CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."video_merchant_video (
 				video_id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
@@ -96,7 +108,7 @@ function video_merchant_db_install()
 				UNIQUE KEY video_id (video_id), 
 				INDEX idx_video_display_name (video_id, video_display_name) 
 			) ".$wpdb->get_charset_collate().";";
-	dbDelta($sql);
+	$wpdb->query($sql);
 	
 	$sql = "CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."video_merchant_playlist (
 				player_id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
@@ -110,7 +122,7 @@ function video_merchant_db_install()
 				UNIQUE KEY player_id (player_id), 
 				INDEX idx_player_search (player_id, player_name, player_filter_value)
 			) ".$wpdb->get_charset_collate().";";
-	dbDelta($sql);
+	$wpdb->query($sql);
 	
 	$sql = "CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."video_merchant_order (
 				order_id CHAR(32) NOT NULL, 
@@ -127,7 +139,9 @@ function video_merchant_db_install()
 				UNIQUE KEY order_id (order_id), 
 				INDEX idx_order_search (order_id, user_id, order_transaction_id, order_status, order_customer_name, order_customer_email, video_id, order_license_type) 
 			) ".$wpdb->get_charset_collate().";";
-	dbDelta($sql);
+	$wpdb->query($sql);
+	
+	update_option('video_merchant_db_version', $video_merchant_db_version);
 }
 
 function video_merchant_get_default_css()
@@ -390,6 +404,8 @@ function video_merchant_download_free()
 	
 	$defaultErrorMsg = __('This download is no longer available.', 'video-merchant');
 	
+	$sql = '';
+	
 	if(isset($_GET['t']))
 	{
 		if((int)video_merchant_get_setting('purchase_user_login_required') > 0 && !current_user_can('manage_options'))
@@ -441,7 +457,8 @@ function video_merchant_download_free()
 		}
 		
 		$sql = 'SELECT 
-					video_file 
+					video_file, 
+					video_lease_additional_file AS \'additional_file\' 
 				FROM '.$wpdb->prefix.'video_merchant_video 
 				WHERE video_id = '.$videoId.' 
 				AND video_lease_price = 0.00 
@@ -453,14 +470,7 @@ function video_merchant_download_free()
 	
 	if(!empty($videoRecord))
 	{
-		if(isset($_GET['t']) && isset($videoRecord['additional_file']) && isset($_GET['additional_file']) && (int)$_GET['additional_file'] > 0)
-		{
-			$downloadFile = $videoRecord['additional_file'];
-		}
-		else
-		{
-			$downloadFile = $videoRecord['video_file'];
-		}
+		$downloadFile = $videoRecord['additional_file'];
 		
 		if(preg_match('@^https?://@i', $downloadFile))
 		{
@@ -627,6 +637,23 @@ function video_merchant_html_player()
 			WHERE video_id IN ('.$videoIds.') 
 			'.$excludeClause.' 
 			ORDER BY FIELD(video_id, '.$videoIds.');';
+		
+		$videoRecords = $wpdb->get_results($sql, ARRAY_A);
+	}
+	else
+	{
+		$sql = 'SELECT 
+				video_id, 
+				video_display_name,
+				video_lease_price, 
+				video_exclusive_price,
+				video_cover_photo,
+				video_file,
+				video_file_preview, 
+				video_duration 
+			FROM '.$wpdb->prefix.'video_merchant_video 
+			WHERE video_id > 0 
+			'.$excludeClause.';';
 		
 		$videoRecords = $wpdb->get_results($sql, ARRAY_A);
 	}
@@ -1393,73 +1420,6 @@ function video_merchant_add_video_file()
 			break;
 	}
 	
-	$fullQualityVideoFile = '';
-	
-	switch($_POST['video_mode'])
-	{
-		case 'upload':
-			if(isset($_FILES['video_upload_file']['name']) && !empty($_FILES['video_upload_file']['name']))
-			{
-				$fileType = strtolower(end((explode('.', $_FILES['video_upload_file']['name']))));
-				
-				if(!in_array($fileType, $supportedVideoExtensions) || $_FILES['video_upload_file']['error'] <> 0)
-				{
-					$result['errors'][] = __('Invalid Full Quality Video File', 'video-merchant');
-				}
-				else
-				{
-					$fullQualityVideoFile = video_merchant_move_uploaded_file_to_inventory($_FILES['video_upload_file']);
-					
-					if(empty($fullQualityVideoFile))
-					{
-						$result['errors'][] = __('Invalid Upload Directory Permissions', 'video-merchant');
-					}
-				}
-			}
-			else
-			{
-				$result['errors'][] = __('Invalid Full Quality Video File', 'video-merchant');
-			}
-			
-			break;
-		
-		case 'url':
-			if(isset($_POST['video_url_file']) && !empty($_POST['video_url_file']))
-			{
-				if(!preg_match('@^https?://@i', $_POST['video_url_file']))
-				{
-					$result['errors'][] = __('Invalid Full Quality Video File', 'video-merchant');
-				}
-				else
-				{
-					$fullQualityVideoFile = $_POST['video_url_file'];
-				}
-			}
-			else
-			{
-				$result['errors'][] = __('Invalid Full Quality Video File', 'video-merchant');
-			}
-			
-			break;
-		
-		case 'existing':
-			if(isset($_POST['video_existing_file']) && !empty($_POST['video_existing_file']))
-			{
-				$fullQualityVideoFile = $_POST['video_existing_file'];
-			}
-			else
-			{
-				$result['errors'][] = __('Invalid Full Quality Video File', 'video-merchant');
-			}
-			
-			break;
-			
-		default:
-			$result['errors'][] = __('Invalid Full Quality Video File OR you have exceeded your webserver\'s php.ini post_max_size setting which is currently set to '.ini_get('post_max_size').' and/or your upload_max_filesize setting which is currently set to '.ini_get('upload_max_filesize').'. Please check all of the above and try your request again.', 'video-merchant');
-			
-			break;
-	}
-	
 	$previewVideoFile = '';
 	
 	switch($_POST['preview_video_mode'])
@@ -1623,17 +1583,22 @@ function video_merchant_add_video_file()
 			break;
 	}
 	
+	if(empty($additionalFileLease))
+	{
+		$result['errors'][] = __('File To Provide Required', 'video-merchant');
+	}
+	
 	if(empty($result['errors']))
 	{
 		if(empty($displayName))
 		{
-			if(preg_match('@^https?://@i', $fullQualityVideoFile))
+			if(preg_match('@^https?://@i', $previewVideoFile))
 			{
-				$displayName = trim(preg_replace('@\.[^\.]+?$@i', '', urldecode(basename($fullQualityVideoFile)), 1));
+				$displayName = trim(preg_replace('@\.[^\.]+?$@i', '', urldecode(basename($previewVideoFile)), 1));
 			}
 			else
 			{
-				$displayName = trim(preg_replace('@-[^-]+?$@i', '', urldecode(basename($fullQualityVideoFile)), 1));
+				$displayName = trim(preg_replace('@-[^-]+?$@i', '', urldecode(basename($previewVideoFile)), 1));
 			}
 			
 			if(empty($displayName))
@@ -1646,13 +1611,13 @@ function video_merchant_add_video_file()
 		{
 			if(empty($coverPhoto))
 			{
-				if(preg_match('@^https?://@i', $fullQualityVideoFile))
+				if(preg_match('@^https?://@i', $previewVideoFile))
 				{
-					$result['full_quality_video_url'] = video_merchant_make_url_protocol_less($fullQualityVideoFile);
+					$result['full_quality_video_url'] = video_merchant_make_url_protocol_less($previewVideoFile);
 				}
 				else
 				{
-					$result['full_quality_video_url'] = video_merchant_make_url_protocol_less($uploadUrl.'/'.$fullQualityVideoFile);
+					$result['full_quality_video_url'] = video_merchant_make_url_protocol_less($uploadUrl.'/'.$previewVideoFile);
 				}
 			}
 			
@@ -1665,7 +1630,7 @@ function video_merchant_add_video_file()
 						'video_lease_price' => $leasePrice,
 						'video_exclusive_price' => $exclusivePrice,
 						'video_cover_photo' => $coverPhoto,
-						'video_file' => $fullQualityVideoFile,
+						'video_file' => $previewVideoFile,
 						'video_file_preview' => $previewVideoFile,
 						'video_lease_additional_file' => $additionalFileLease,
 						'video_exclusive_additional_file' => $additionalFileExclusive,
@@ -1701,7 +1666,7 @@ function video_merchant_add_video_file()
 						'video_lease_price' => $leasePrice,
 						'video_exclusive_price' => $exclusivePrice,
 						'video_cover_photo' => $coverPhoto,
-						'video_file' => $fullQualityVideoFile,
+						'video_file' => $previewVideoFile,
 						'video_file_preview' => $previewVideoFile,
 						'video_lease_additional_file' => $additionalFileLease,
 						'video_exclusive_additional_file' => $additionalFileExclusive,
@@ -1832,7 +1797,7 @@ function video_merchant_render_player($videoIds=array(), $playerId=0, $height=40
 	
 	if($playerId > 0)
 	{
-		$html = '<iframe width="100%" height="'.(string)$height.'" scrolling="no" frameborder="no" src="'.video_merchant_make_url_protocol_less(admin_url('admin-ajax.php?action=video_merchant_html_player'.$urlDivider.'playlist_id='.(string)$playerId.$urlDivider.'height='.(string)$height.$urlDivider.'autoplay='.(string)$autoPlay.$urlDivider.'current_url='.urlencode($currentUrl))).'"></iframe>';
+		$html = '<iframe width="100%" height="'.(string)$height.'" scrolling="no" frameborder="no" src="'.video_merchant_make_url_protocol_less(admin_url('admin-ajax.php?action=video_merchant_html_player'.$urlDivider.'nocache=1'.$urlDivider.'playlist_id='.(string)$playerId.$urlDivider.'height='.(string)$height.$urlDivider.'autoplay='.(string)$autoPlay.$urlDivider.'current_url='.urlencode($currentUrl))).'"></iframe>';
 	}
 	elseif(!empty($videoIds))
 	{
@@ -1841,7 +1806,11 @@ function video_merchant_render_player($videoIds=array(), $playerId=0, $height=40
 			$videoIds = implode(',', $videoIds);
 		}
 		
-		$html = '<iframe width="100%" height="'.(string)$height.'" scrolling="no" frameborder="no" src="'.video_merchant_make_url_protocol_less(admin_url('admin-ajax.php?action=video_merchant_html_player'.$urlDivider.'video_id='.(string)$videoIds.$urlDivider.'height='.(string)$height.$urlDivider.'autoplay='.(string)$autoPlay.$urlDivider.'current_url='.urlencode($currentUrl))).'"></iframe>';
+		$html = '<iframe width="100%" height="'.(string)$height.'" scrolling="no" frameborder="no" src="'.video_merchant_make_url_protocol_less(admin_url('admin-ajax.php?action=video_merchant_html_player'.$urlDivider.'nocache=1'.$urlDivider.'video_id='.(string)$videoIds.$urlDivider.'height='.(string)$height.$urlDivider.'autoplay='.(string)$autoPlay.$urlDivider.'current_url='.urlencode($currentUrl))).'"></iframe>';
+	}
+	else
+	{
+		$html = '<iframe width="100%" height="'.(string)$height.'" scrolling="no" frameborder="no" src="'.video_merchant_make_url_protocol_less(admin_url('admin-ajax.php?action=video_merchant_html_player'.$urlDivider.'nocache=1'.$urlDivider.'video_id='.$urlDivider.'height='.(string)$height.$urlDivider.'autoplay='.(string)$autoPlay.$urlDivider.'current_url='.urlencode($currentUrl))).'"></iframe>';
 	}
 	
 	if((int)video_merchant_get_setting('show_author_link') > 0)

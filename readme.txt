@@ -1,14 +1,14 @@
 === Video Merchant ===
 Contributors: VideoMerchant
 Donate link: http://www.myvideomerchant.com/#download
-Tags: sell videos, video player, html5 video player, play videos, view videos, merchant, mp4, ogv, ogg, producer, movie, director, tv, television, html
+Tags: sell videos, video player, html5 video player, html video player, play videos, view videos, merchant, mp4, ogv, ogg, producer, movie, director, tv, television, html
 Requires at least: 3.6.0
 Tested up to: 4.2.2
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Sell or showcase your video directly to your viewers with this versatile HTML5 video player.
+Sell or showcase your videos directly to your audience with this customizable HTML5 video player.
 
 == Description ==
 
@@ -76,6 +76,15 @@ Yes, if you don't provide the Video Merchant plugin with a receiving PayPal addr
 6. Customer receipt and download page after payment is completed.
 
 == Changelog ==
+= 5.0.2 =
+* Deprecated redundant full quality file field.
+* Shorten the display of long URLs in admin.
+* Added option to bypass cache in the frontend player.
+* Added check database tables.
+* Added maxlength to fields to prevent overflow.
+* Small text changes.
+* Minor code cleanup and optimization.
+
 = 5.0.1 =
 * Small CSS fix.
 

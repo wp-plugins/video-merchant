@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Video Merchant
- * @version 5.0.1
+ * @version 5.0.2
  * @author Video Merchant <info@MyVideoMerchant.com>
  * @copyright (C) Copyright 2015 Video Merchant, MyVideoMerchant.com. All rights reserved.
  * @license GNU/GPL http://www.gnu.org/licenses/gpl-3.0.txt
@@ -63,8 +63,8 @@ if(!get_option('css_frontend_default'))
 						<th><?php echo __('Video Thumbnail Image', 'video-merchant'); ?></th>
 						<th><?php echo __('Video File', 'video-merchant'); ?></th>
 						<th><?php echo __('Video Preview File', 'video-merchant'); ?></th>
-						<th><?php echo __('Additional File', 'video-merchant'); ?></th>
-						<th><?php echo __('Additional Exclusive File', 'video-merchant'); ?></th>
+						<th><?php echo __('File', 'video-merchant'); ?></th>
+						<th><?php echo __('Exclusive File', 'video-merchant'); ?></th>
 						<th><?php echo __('Video Duration', 'video-merchant'); ?></th>
 						<th><?php echo __('Date Created', 'video-merchant'); ?></th>
 						<th><?php echo __('Last Modified', 'video-merchant'); ?></th>
@@ -81,79 +81,22 @@ if(!get_option('css_frontend_default'))
 						<br />
 
 						<label for="video_lease_price"><?php echo __('Video Full Quality Download Price:', 'video-merchant'); ?></label>
-						<input type="text" name="video_lease_price" id="video_lease_price" value="" placeholder="<?php echo __('Example Format: 20.00', 'video-merchant'); ?>" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('The price to download the full quality video file. If price is empty or set to 0 then this file will be available for free download.', 'video-merchant'); ?>" />
+						<input type="text" name="video_lease_price" id="video_lease_price" value="" maxlength="13" placeholder="<?php echo __('Example Format: 20.00', 'video-merchant'); ?>" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('The price to download the full quality video file. If price is empty or set to 0 then this file will be available for free download.', 'video-merchant'); ?>" />
 						<br /><br />
 						<label for="video_exclusive_price"><?php echo __('Exclusive Price:', 'video-merchant'); ?></label>
-						<input type="hidden" name="video_exclusive_price" id="video_exclusive_price" value="" placeholder="<?php echo __('Example Format: 200.00', 'video-merchant'); ?>" class="text ui-widget-content ui-corner-all" /> <img class="video_exclusive_price_tip" src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('The price to purchase an exclusive license and download the full quality video file. When files are purchased exclusively, they are removed from the frontend player after a successfull checkout. Set to 0 to disable this option. If exclusive price AND lease price are both set to 0 then this file will be available for free download.', 'video-merchant'); ?>" />
+						<input type="hidden" name="video_exclusive_price" id="video_exclusive_price" value="" maxlength="13" placeholder="<?php echo __('Example Format: 200.00', 'video-merchant'); ?>" class="text ui-widget-content ui-corner-all" /> <img class="video_exclusive_price_tip" src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('The price to purchase an exclusive license and download the full quality video file. When files are purchased exclusively, they are removed from the frontend player after a successfull checkout. Set to 0 to disable this option. If exclusive price AND lease price are both set to 0 then this file will be available for free download.', 'video-merchant'); ?>" />
 
 						<br class="video_exclusive_price_tip" />
 						<br class="video_exclusive_price_tip" />
-						<div class="upload_file_wrapper">
-							<div id="cover_photo_upload_file_wrapper">
-								<label for="cover_photo_upload_file"><?php echo __('Video Thumbnail Image:', 'video-merchant'); ?></label>
-								<input type="file" name="cover_photo_upload_file" id="cover_photo_upload_file" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('The image that represents this video file. This is the image displayed on the frontend player when this song is being played. The image width and height should be proportional. We recommend a size of 300 x 300 pixels, however this field is flexible and will accept any image dimensions and will resize them automatically. Acceptable formats are: .png, .jpg, .gif. Auto-generated from full quality video if left empty.', 'video-merchant'); ?>" />
-							</div>
-							<div id="cover_photo_url_file_wrapper" class="hidden">
-								<label for="cover_photo_url_file"><?php echo __('Video Thumbnail Image:', 'video-merchant'); ?></label>
-								<input type="text" name="cover_photo_url_file" id="cover_photo_url_file" value="" placeholder="http://externalserver.com/my_video_thumbnail_image.png" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('The image that represents this video file. This is the image displayed on the frontend player when this song is being played. The image width and height should be proportional. We recommend a size of 300 x 300 pixels, however this field is flexible and will accept any image dimensions and will resize them automatically. Acceptable formats are: .png, .jpg, .gif. Auto-generated from full quality video if left empty.', 'video-merchant'); ?>" />
-							</div>
-							<div id="cover_photo_existing_file_wrapper" class="hidden">
-								<?php echo __('Video Thumbnail Image:', 'video-merchant'); ?>
-								<span class="existing_file_scroller">
-									<?php
-									$existingFiles = array();
-
-									if(file_exists($uploadDir))
-									{
-										if($supportedImageTypes)
-										{
-											foreach($supportedImageTypes as $supportedExtension)
-											{
-												foreach(glob($uploadDir.DIRECTORY_SEPARATOR.'*.'.$supportedExtension) as $file) 
-												{
-													$existingFiles[] = $file;
-												}
-
-												foreach(glob($uploadDir.DIRECTORY_SEPARATOR.'*.'.strtoupper($supportedExtension)) as $file) 
-												{
-													$existingFiles[] = $file;
-												}
-											}
-
-											$existingFiles = array_unique($existingFiles);
-										}
-									}
-
-									if(!empty($existingFiles))
-									{
-										foreach($existingFiles as $key => $existingFile)
-										{
-											$filename = basename($existingFile);
-
-											echo '<span><input type="radio" name="cover_photo_existing_file" id="cover_photo_existing_file_'.$key.'" value="'.$filename.'" /><label for="cover_photo_existing_file_'.$key.'"><img src="'.video_merchant_make_url_protocol_less($uploadUrl).'/'.$filename.'" width="50" height="50" border="0" alt="" /><br /><a href="'.$uploadUrl.'/'.$filename.'" target="_blank" title="'.$filename.'">'.substr($filename, 0, 9).'...</a></label></span>';
-										}
-									}
-									else 
-									{
-										echo '<span class="warning_msg">'.__('There are currently no files uploaded!', 'video-merchant').'</span>';
-									}
-									?>
-								</span> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('The image that represents this video file. This is the image displayed on the frontend player when this song is being played. The image width and height should be proportional. We recommend a size of 300 x 300 pixels, however this field is flexible and will accept any image dimensions and will resize them automatically. Acceptable formats are: .png, .jpg, .gif. Auto-generated from full quality video if left empty.', 'video-merchant'); ?>" />
-							</div>
-							<div class="small_url_container">
-								<input type="hidden" class="upload_mode" name="cover_photo_mode" value="upload" />
-								<a id="cover_photo_upload_link" class="hidden" href="javascript: void(0);" onclick="javascript: return toggle_upload_field('upload', document.getElementById('cover_photo_upload_link'), 'cover_photo_upload_file_wrapper');"><?php echo __('Upload File', 'video-merchant'); ?></a> <a id="cover_photo_url_link" href="javascript: void(0);" onclick="javascript: return toggle_upload_field('url', document.getElementById('cover_photo_url_link'), 'cover_photo_url_file_wrapper');"><?php echo __('Specify URL', 'video-merchant'); ?></a> <a id="cover_photo_existing_link" class="last_small_url" href="javascript: void(0);" onclick="javascript: return toggle_upload_field('existing', document.getElementById('cover_photo_existing_link'), 'cover_photo_existing_file_wrapper');"><?php echo __('Select Existing File', 'video-merchant'); ?></a>
-							</div>
-							<div class="clear"></div>
-						</div>
-						<div class="upload_file_wrapper">
+						
+						<div class="upload_file_wrapper hidden">
 							<div id="video_upload_file_wrapper">
 								<label for="video_upload_file"><?php echo __('Full Quality Video File:', 'video-merchant'); ?></label>
 								<input type="file" name="video_upload_file" id="video_upload_file" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This is the full quality video file that is delivered to the buyer at the end of a successful purchase. This file should NOT contain any video watermarks. Acceptable formats are: .mp4, .ogg, .ogv, .webm', 'video-merchant'); ?>" />
 							</div>
 							<div id="video_url_file_wrapper" class="hidden">
 								<label for="video_url_file"><?php echo __('Full Quality Video File:', 'video-merchant'); ?></label>
-								<input type="text" name="video_url_file" id="video_url_file" value="" placeholder="http://externalserver.com/my_full_quality_video_file.mp4" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This is the full quality video file that is delivered to the buyer at the end of a successful purchase. This file should NOT contain any video watermarks. Acceptable formats are: .mp4, .ogg, .ogv, .webm', 'video-merchant'); ?>" />
+								<input type="text" name="video_url_file" id="video_url_file" value="" maxlength="250" placeholder="http://externalserver.com/my_full_quality_video_file.mp4" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This is the full quality video file that is delivered to the buyer at the end of a successful purchase. This file should NOT contain any video watermarks. Acceptable formats are: .mp4, .ogg, .ogv, .webm', 'video-merchant'); ?>" />
 							</div>
 							<div id="video_existing_file_wrapper" class="hidden">
 								<?php echo __('Full Quality Video File:', 'video-merchant'); ?>
@@ -211,7 +154,7 @@ if(!get_option('css_frontend_default'))
 							</div>
 							<div id="preview_video_url_file_wrapper" class="hidden">
 								<label for="preview_video_url_file"><?php echo __('Preview Video File:', 'video-merchant'); ?></label>
-								<input type="text" name="preview_video_url_file" id="preview_video_url_file" value="" placeholder="http://externalserver.com/my_video_preview_file.mp4" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This is the video file that the guest listens to on the frontend player BEFORE they purchase the full quality video file. This file is used as a form of protection, and MAY contain video watermarks and/or other forms of protection. This file may even be shorter than the full quality video file, if you choose. Alternatively, you can play the full quality video file for your guests as the preview file, which we HIGHLY discourage, by re-uploading your full quality video file again in this field, however we HIGHLY recommend differentiating your preview file audo file and your full quality video file for security reasons. Acceptable formats are: .mp4, .ogg, .ogv, .webm', 'video-merchant'); ?>" />
+								<input type="text" name="preview_video_url_file" id="preview_video_url_file" value="" maxlength="250" placeholder="http://externalserver.com/my_video_preview_file.mp4" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This is the video file that the guest listens to on the frontend player BEFORE they purchase the full quality video file. This file is used as a form of protection, and MAY contain video watermarks and/or other forms of protection. This file may even be shorter than the full quality video file, if you choose. Alternatively, you can play the full quality video file for your guests as the preview file, which we HIGHLY discourage, by re-uploading your full quality video file again in this field, however we HIGHLY recommend differentiating your preview file audo file and your full quality video file for security reasons. Acceptable formats are: .mp4, .ogg, .ogv, .webm', 'video-merchant'); ?>" />
 							</div>
 							<div id="preview_video_existing_file_wrapper" class="hidden">
 								<?php echo __('Preview Video File:', 'video-merchant'); ?>
@@ -264,15 +207,15 @@ if(!get_option('css_frontend_default'))
 						</div>
 						<div class="upload_file_wrapper">
 							<div id="additional_lease_file_wrapper">
-								<label for="additional_lease_file"><?php echo __('Additional File To Provide With Purchase:', 'video-merchant'); ?></label>
+								<label for="additional_lease_file"><?php echo __('File To Provide With Purchase Or Free Download:', 'video-merchant'); ?></label>
 								<input type="file" name="additional_lease_file" id="additional_lease_file" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This file is provided to buyers AFTER they purchase a video. This is a great place to provide additional files (.pdf), or any other file that may relate to your video file. Accepts any file format. If you wish to provide multiple files, please archive (.zip, .rar, etc.) them up into one file first, then upload that file here.', 'video-merchant'); ?>" />
 							</div>
 							<div id="additional_lease_url_file_wrapper" class="hidden">
-								<label for="additional_lease_url_file"><?php echo __('Additional File To Provide With Purchase:', 'video-merchant'); ?></label>
-								<input type="text" name="additional_lease_url_file" id="additional_lease_url_file" value="" placeholder="http://externalserver.com/my_additional_file.zip" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This file is provided to buyers AFTER they purchase a video. This is a great place to provide additional files (.pdf), or any other file that may relate to your video file. Accepts any file format. If you wish to provide multiple files, please archive (.zip, .rar, etc.) them up into one file first, then upload that file here.', 'video-merchant'); ?>" />
+								<label for="additional_lease_url_file"><?php echo __('File To Provide With Purchase Or Free Download:', 'video-merchant'); ?></label>
+								<input type="text" name="additional_lease_url_file" id="additional_lease_url_file" value="" maxlength="250" placeholder="http://externalserver.com/my_full_quality_file.zip" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This file is provided to buyers AFTER they purchase a video. This is a great place to provide additional files (.pdf), or any other file that may relate to your video file. Accepts any file format. If you wish to provide multiple files, please archive (.zip, .rar, etc.) them up into one file first, then upload that file here.', 'video-merchant'); ?>" />
 							</div>
 							<div id="additional_lease_existing_file_wrapper" class="hidden">
-								<?php echo __('Additional File To Provide With Purchase:', 'video-merchant'); ?>
+								<?php echo __('File To Provide With Purchase Or Free Download:', 'video-merchant'); ?>
 								<span class="existing_file_scroller">
 									<?php
 									$existingVideoFiles = array();
@@ -331,15 +274,15 @@ if(!get_option('css_frontend_default'))
 
 						<div class="upload_file_wrapper video_exclusive_price_tip">
 							<div id="additional_exclusive_file_wrapper">
-								<label for="additional_exclusive_file"><?php echo __('Additional File To Provide With Exclusive Purchase:', 'video-merchant'); ?></label>
-								<input type="file" name="additional_exclusive_file" id="additional_exclusive_file" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This file is provided to buyers AFTER they purchase an exclusive license. This is a great place to provide tracked out wav files or any additional license files (.pdf) that may relate to your video file. Accepts any file format. If you wish to provide multiple files, please archive (.zip, .rar, etc.) them up into one file first, then upload that file here.', 'video-merchant'); ?>" />
+								<label for="additional_exclusive_file"><?php echo __('File To Provide With Exclusive Purchase:', 'video-merchant'); ?></label>
+								<input type="file" name="additional_exclusive_file" id="additional_exclusive_file" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This file is provided to buyers AFTER they purchase an exclusive license. Accepts any file format. If you wish to provide multiple files, please archive (.zip, .rar, etc.) them up into one file first, then upload that file here.', 'video-merchant'); ?>" />
 							</div>
 							<div id="additional_exclusive_url_file_wrapper" class="hidden">
-								<label for="additional_exclusive_url_file"><?php echo __('Additional File To Provide With Exclusive Purchase:', 'video-merchant'); ?></label>
-								<input type="text" name="additional_exclusive_url_file" id="additional_exclusive_url_file" value="" placeholder="http://externalserver.com/my_additional_exclusive_file.zip" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This file is provided to buyers AFTER they purchase an exclusive license. This is a great place to provide tracked out wav files or any additional license files (.pdf) that may relate to your video file. Accepts any file format. If you wish to provide multiple files, please archive (.zip, .rar, etc.) them up into one file first, then upload that file here.', 'video-merchant'); ?>" />
+								<label for="additional_exclusive_url_file"><?php echo __('File To Provide With Exclusive Purchase:', 'video-merchant'); ?></label>
+								<input type="text" name="additional_exclusive_url_file" id="additional_exclusive_url_file" value="" maxlength="250" placeholder="http://externalserver.com/my_additional_exclusive_file.zip" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This file is provided to buyers AFTER they purchase an exclusive license. Accepts any file format. If you wish to provide multiple files, please archive (.zip, .rar, etc.) them up into one file first, then upload that file here.', 'video-merchant'); ?>" />
 							</div>
 							<div id="additional_exclusive_existing_file_wrapper" class="hidden">
-								<?php echo __('Additional File To Provide With Exclusive Purchase:', 'video-merchant'); ?>
+								<?php echo __('File To Provide With Exclusive Purchase:', 'video-merchant'); ?>
 								<span class="existing_file_scroller">
 									<?php
 									$existingVideoFiles = array();
@@ -387,7 +330,7 @@ if(!get_option('css_frontend_default'))
 										echo '<span class="warning_msg">'.__('There are currently no files uploaded!', 'video-merchant').'</span>';
 									}
 									?>
-								</span> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This file is provided to buyers AFTER they purchase an exclusive license. This is a great place to provide tracked out wav files or any additional license files (.pdf) that may relate to your video file. Accepts any file format. If you wish to provide multiple files, please archive (.zip, .rar, etc.) them up into one file first, then upload that file here.', 'video-merchant'); ?>" />
+								</span> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This file is provided to buyers AFTER they purchase an exclusive license. Accepts any file format. If you wish to provide multiple files, please archive (.zip, .rar, etc.) them up into one file first, then upload that file here.', 'video-merchant'); ?>" />
 							</div>
 							<div class="small_url_container">
 								<input type="hidden" class="upload_mode" name="addtional_file_exclusive_mode" value="upload" />
@@ -395,6 +338,66 @@ if(!get_option('css_frontend_default'))
 							</div>
 							<div class="clear"></div>
 						</div>
+						
+						<div class="upload_file_wrapper">
+							<div id="cover_photo_upload_file_wrapper">
+								<label for="cover_photo_upload_file"><?php echo __('Video Thumbnail Image:', 'video-merchant'); ?></label>
+								<input type="file" name="cover_photo_upload_file" id="cover_photo_upload_file" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('The image that represents this video file. This is the image displayed on the frontend player when this song is being played. The image width and height should be proportional. We recommend a size of 300 x 300 pixels, however this field is flexible and will accept any image dimensions and will resize them automatically. Acceptable formats are: .png, .jpg, .gif. Auto-generated from full quality video if left empty.', 'video-merchant'); ?>" />
+							</div>
+							<div id="cover_photo_url_file_wrapper" class="hidden">
+								<label for="cover_photo_url_file"><?php echo __('Video Thumbnail Image:', 'video-merchant'); ?></label>
+								<input type="text" name="cover_photo_url_file" id="cover_photo_url_file" value="" maxlength="250" placeholder="http://externalserver.com/my_video_thumbnail_image.png" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('The image that represents this video file. This is the image displayed on the frontend player when this song is being played. The image width and height should be proportional. We recommend a size of 300 x 300 pixels, however this field is flexible and will accept any image dimensions and will resize them automatically. Acceptable formats are: .png, .jpg, .gif. Auto-generated from full quality video if left empty.', 'video-merchant'); ?>" />
+							</div>
+							<div id="cover_photo_existing_file_wrapper" class="hidden">
+								<?php echo __('Video Thumbnail Image:', 'video-merchant'); ?>
+								<span class="existing_file_scroller">
+									<?php
+									$existingFiles = array();
+
+									if(file_exists($uploadDir))
+									{
+										if($supportedImageTypes)
+										{
+											foreach($supportedImageTypes as $supportedExtension)
+											{
+												foreach(glob($uploadDir.DIRECTORY_SEPARATOR.'*.'.$supportedExtension) as $file) 
+												{
+													$existingFiles[] = $file;
+												}
+
+												foreach(glob($uploadDir.DIRECTORY_SEPARATOR.'*.'.strtoupper($supportedExtension)) as $file) 
+												{
+													$existingFiles[] = $file;
+												}
+											}
+
+											$existingFiles = array_unique($existingFiles);
+										}
+									}
+
+									if(!empty($existingFiles))
+									{
+										foreach($existingFiles as $key => $existingFile)
+										{
+											$filename = basename($existingFile);
+
+											echo '<span><input type="radio" name="cover_photo_existing_file" id="cover_photo_existing_file_'.$key.'" value="'.$filename.'" /><label for="cover_photo_existing_file_'.$key.'"><img src="'.video_merchant_make_url_protocol_less($uploadUrl).'/'.$filename.'" width="50" height="50" border="0" alt="" /><br /><a href="'.$uploadUrl.'/'.$filename.'" target="_blank" title="'.$filename.'">'.substr($filename, 0, 9).'...</a></label></span>';
+										}
+									}
+									else 
+									{
+										echo '<span class="warning_msg">'.__('There are currently no files uploaded!', 'video-merchant').'</span>';
+									}
+									?>
+								</span> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('The image that represents this video file. This is the image displayed on the frontend player when this song is being played. The image width and height should be proportional. We recommend a size of 300 x 300 pixels, however this field is flexible and will accept any image dimensions and will resize them automatically. Acceptable formats are: .png, .jpg, .gif. Auto-generated from full quality video if left empty.', 'video-merchant'); ?>" />
+							</div>
+							<div class="small_url_container">
+								<input type="hidden" class="upload_mode" name="cover_photo_mode" value="upload" />
+								<a id="cover_photo_upload_link" class="hidden" href="javascript: void(0);" onclick="javascript: return toggle_upload_field('upload', document.getElementById('cover_photo_upload_link'), 'cover_photo_upload_file_wrapper');"><?php echo __('Upload File', 'video-merchant'); ?></a> <a id="cover_photo_url_link" href="javascript: void(0);" onclick="javascript: return toggle_upload_field('url', document.getElementById('cover_photo_url_link'), 'cover_photo_url_file_wrapper');"><?php echo __('Specify URL', 'video-merchant'); ?></a> <a id="cover_photo_existing_link" class="last_small_url" href="javascript: void(0);" onclick="javascript: return toggle_upload_field('existing', document.getElementById('cover_photo_existing_link'), 'cover_photo_existing_file_wrapper');"><?php echo __('Select Existing File', 'video-merchant'); ?></a>
+							</div>
+							<div class="clear"></div>
+						</div>
+						
 						<input type="hidden" name="editing_video_id" id="editing_video_id" value="" />
 						<!-- Allow form submission with keyboard without duplicating the dialog button -->
 						<input type="submit" tabindex="-1" class="default_submit_button" />
