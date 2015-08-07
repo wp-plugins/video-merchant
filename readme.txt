@@ -76,6 +76,10 @@ Yes, if you don't provide the Video Merchant plugin with a receiving PayPal addr
 6. Customer receipt and download page after payment is completed.
 
 == Changelog ==
+= 5.0.3 =
+* Fixed bug that prevented new playlist or other fields being saved due to current_timestamp returning float instead of integer on some webservers.
+* Removed no cache variable from frontend player to allow caching of player by third party cache plugins like wp super cache.
+
 = 5.0.2 =
 * Deprecated redundant full quality file field.
 * Shorten the display of long URLs in admin.

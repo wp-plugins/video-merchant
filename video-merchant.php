@@ -3,7 +3,7 @@
  * Plugin Name: Video Merchant Lite
  * Plugin URI: http://www.MyVideoMerchant.com
  * Description: Plugin that allows you to sell/showcase your videos with built-in HTML5 player.
- * Version: 5.0.2
+ * Version: 5.0.3
  * Author: Video Merchant
  * Author URI: http://www.MyVideoMerchant.com
  * Text Domain: video-merchant
@@ -11,7 +11,7 @@
  */
 /**
  * @package Video Merchant
- * @version 5.0.2
+ * @version 5.0.3
  * @author Video Merchant <info@MyVideoMerchant.com>
  * @copyright (C) Copyright 2015 Video Merchant, MyVideoMerchant.com. All rights reserved.
  * @license GNU/GPL http://www.gnu.org/licenses/gpl-3.0.txt
@@ -74,7 +74,7 @@ add_action('wp_ajax_nopriv_video_merchant_download', 'video_merchant_download_fr
 add_action('wp_ajax_video_merchant_check_order_status', 'video_merchant_check_order_status');
 add_action('wp_ajax_nopriv_video_merchant_check_order_status', 'video_merchant_check_order_status');
 
-$video_merchant_db_version = '5.0.2';
+$video_merchant_db_version = '5.0.3';
 
 function video_merchant_db_check() 
 {
@@ -161,7 +161,7 @@ function video_merchant_change_order_status()
 	$sql = 'UPDATE '.$wpdb->prefix.'video_merchant_order SET order_status = %s, order_mdate = %d 
 			WHERE order_id = %s;';
 	
-	wp_send_json(array('result' => $wpdb->query($wpdb->prepare($sql, $_GET['new_status'], current_time('timestamp'), $_GET['t']))));
+	wp_send_json(array('result' => $wpdb->query($wpdb->prepare($sql, $_GET['new_status'], (int)current_time('timestamp'), $_GET['t']))));
 }
 
 function video_merchant_video_update_thumbnail_image()
@@ -419,7 +419,7 @@ function video_merchant_download_free()
 		
 		if((int)video_merchant_get_setting('temp_download_link_expiration') > 0)
 		{
-			$dateFilterSql = ' AND o.order_mdate >= '.(current_time('timestamp')-(86400*(int)video_merchant_get_setting('temp_download_link_expiration'))).' ';
+			$dateFilterSql = ' AND o.order_mdate >= '.((int)current_time('timestamp')-(86400*(int)video_merchant_get_setting('temp_download_link_expiration'))).' ';
 		}
 		else
 		{
@@ -935,7 +935,7 @@ function video_merchant_save_playlist()
 					'player_filter_value' => htmlentities($filterValue, ENT_QUOTES), 
 					'player_order_field' => $orderByField, 
 					'player_order_direction' => $orderByDirection, 
-					'player_mdate' => current_time('timestamp')
+					'player_mdate' => (int)current_time('timestamp')
 				), 
 				array('player_id' => $playerId), 
 				array(
@@ -962,8 +962,8 @@ function video_merchant_save_playlist()
 					'player_filter_value' => htmlentities($filterValue, ENT_QUOTES), 
 					'player_order_field' => $orderByField, 
 					'player_order_direction' => $orderByDirection, 
-					'player_cdate' => current_time('timestamp'), 
-					'player_mdate' => current_time('timestamp')
+					'player_cdate' => (int)current_time('timestamp'), 
+					'player_mdate' => (int)current_time('timestamp')
 				), 
 				array( 
 					'%s', 
@@ -1603,7 +1603,7 @@ function video_merchant_add_video_file()
 			
 			if(empty($displayName))
 			{
-				$displayName = current_time('timestamp');
+				$displayName = (int)current_time('timestamp');
 			}
 		}
 		
@@ -1635,8 +1635,8 @@ function video_merchant_add_video_file()
 						'video_lease_additional_file' => $additionalFileLease,
 						'video_exclusive_additional_file' => $additionalFileExclusive,
 						'video_duration' => 0,
-						'video_cdate' => current_time('timestamp'),
-						'video_mdate' => current_time('timestamp')
+						'video_cdate' => (int)current_time('timestamp'),
+						'video_mdate' => (int)current_time('timestamp')
 					), 
 					array( 
 						'%s', 
@@ -1671,7 +1671,7 @@ function video_merchant_add_video_file()
 						'video_lease_additional_file' => $additionalFileLease,
 						'video_exclusive_additional_file' => $additionalFileExclusive,
 						'video_duration' => 0,
-						'video_mdate' => current_time('timestamp')
+						'video_mdate' => (int)current_time('timestamp')
 					), 
 					array('video_id' => (int)$_POST['editing_video_id']), 
 					array( 
@@ -1797,7 +1797,7 @@ function video_merchant_render_player($videoIds=array(), $playerId=0, $height=40
 	
 	if($playerId > 0)
 	{
-		$html = '<iframe width="100%" height="'.(string)$height.'" scrolling="no" frameborder="no" src="'.video_merchant_make_url_protocol_less(admin_url('admin-ajax.php?action=video_merchant_html_player'.$urlDivider.'nocache=1'.$urlDivider.'playlist_id='.(string)$playerId.$urlDivider.'height='.(string)$height.$urlDivider.'autoplay='.(string)$autoPlay.$urlDivider.'current_url='.urlencode($currentUrl))).'"></iframe>';
+		$html = '<iframe width="100%" height="'.(string)$height.'" scrolling="no" frameborder="no" src="'.video_merchant_make_url_protocol_less(admin_url('admin-ajax.php?action=video_merchant_html_player'.$urlDivider.'playlist_id='.(string)$playerId.$urlDivider.'height='.(string)$height.$urlDivider.'autoplay='.(string)$autoPlay.$urlDivider.'current_url='.urlencode($currentUrl))).'"></iframe>';
 	}
 	elseif(!empty($videoIds))
 	{
@@ -1806,11 +1806,11 @@ function video_merchant_render_player($videoIds=array(), $playerId=0, $height=40
 			$videoIds = implode(',', $videoIds);
 		}
 		
-		$html = '<iframe width="100%" height="'.(string)$height.'" scrolling="no" frameborder="no" src="'.video_merchant_make_url_protocol_less(admin_url('admin-ajax.php?action=video_merchant_html_player'.$urlDivider.'nocache=1'.$urlDivider.'video_id='.(string)$videoIds.$urlDivider.'height='.(string)$height.$urlDivider.'autoplay='.(string)$autoPlay.$urlDivider.'current_url='.urlencode($currentUrl))).'"></iframe>';
+		$html = '<iframe width="100%" height="'.(string)$height.'" scrolling="no" frameborder="no" src="'.video_merchant_make_url_protocol_less(admin_url('admin-ajax.php?action=video_merchant_html_player'.$urlDivider.'video_id='.(string)$videoIds.$urlDivider.'height='.(string)$height.$urlDivider.'autoplay='.(string)$autoPlay.$urlDivider.'current_url='.urlencode($currentUrl))).'"></iframe>';
 	}
 	else
 	{
-		$html = '<iframe width="100%" height="'.(string)$height.'" scrolling="no" frameborder="no" src="'.video_merchant_make_url_protocol_less(admin_url('admin-ajax.php?action=video_merchant_html_player'.$urlDivider.'nocache=1'.$urlDivider.'video_id='.$urlDivider.'height='.(string)$height.$urlDivider.'autoplay='.(string)$autoPlay.$urlDivider.'current_url='.urlencode($currentUrl))).'"></iframe>';
+		$html = '<iframe width="100%" height="'.(string)$height.'" scrolling="no" frameborder="no" src="'.video_merchant_make_url_protocol_less(admin_url('admin-ajax.php?action=video_merchant_html_player'.$urlDivider.'video_id='.$urlDivider.'height='.(string)$height.$urlDivider.'autoplay='.(string)$autoPlay.$urlDivider.'current_url='.urlencode($currentUrl))).'"></iframe>';
 	}
 	
 	if((int)video_merchant_get_setting('show_author_link') > 0)

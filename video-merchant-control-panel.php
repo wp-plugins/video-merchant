@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Video Merchant
- * @version 5.0.2
+ * @version 5.0.3
  * @author Video Merchant <info@MyVideoMerchant.com>
  * @copyright (C) Copyright 2015 Video Merchant, MyVideoMerchant.com. All rights reserved.
  * @license GNU/GPL http://www.gnu.org/licenses/gpl-3.0.txt
