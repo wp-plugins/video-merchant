@@ -3,7 +3,7 @@
  * Plugin Name: Video Merchant Lite
  * Plugin URI: http://www.MyVideoMerchant.com
  * Description: Plugin that allows you to sell/showcase your videos with built-in HTML5 player.
- * Version: 5.0.3
+ * Version: 5.0.4
  * Author: Video Merchant
  * Author URI: http://www.MyVideoMerchant.com
  * Text Domain: video-merchant
@@ -11,7 +11,7 @@
  */
 /**
  * @package Video Merchant
- * @version 5.0.3
+ * @version 5.0.4
  * @author Video Merchant <info@MyVideoMerchant.com>
  * @copyright (C) Copyright 2015 Video Merchant, MyVideoMerchant.com. All rights reserved.
  * @license GNU/GPL http://www.gnu.org/licenses/gpl-3.0.txt
@@ -74,7 +74,7 @@ add_action('wp_ajax_nopriv_video_merchant_download', 'video_merchant_download_fr
 add_action('wp_ajax_video_merchant_check_order_status', 'video_merchant_check_order_status');
 add_action('wp_ajax_nopriv_video_merchant_check_order_status', 'video_merchant_check_order_status');
 
-$video_merchant_db_version = '5.0.3';
+$video_merchant_db_version = '5.0.4';
 
 function video_merchant_db_check() 
 {
@@ -94,50 +94,47 @@ function video_merchant_db_install()
 	
 	$sql = "CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."video_merchant_video (
 				video_id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
-				video_display_name VARCHAR(190) NOT NULL,
+				video_display_name VARCHAR(255) NOT NULL,
 				video_lease_price DECIMAL(10, 2) UNSIGNED NOT NULL,
 				video_exclusive_price DECIMAL(10, 2) UNSIGNED NOT NULL,
-				video_cover_photo VARCHAR(250) NOT NULL,
-				video_file VARCHAR(250) NOT NULL,
-				video_file_preview VARCHAR(250) NOT NULL,
-				video_lease_additional_file VARCHAR(250) NOT NULL,
-				video_exclusive_additional_file VARCHAR(250) NOT NULL,
+				video_cover_photo VARCHAR(255) NOT NULL,
+				video_file VARCHAR(255) NOT NULL,
+				video_file_preview VARCHAR(255) NOT NULL,
+				video_lease_additional_file VARCHAR(255) NOT NULL,
+				video_exclusive_additional_file VARCHAR(255) NOT NULL,
 				video_duration SMALLINT UNSIGNED DEFAULT 0 NOT NULL,
 				video_cdate INT UNSIGNED DEFAULT 0 NOT NULL, 
 				video_mdate INT UNSIGNED DEFAULT 0 NOT NULL,
-				UNIQUE KEY video_id (video_id), 
-				INDEX idx_video_display_name (video_id, video_display_name) 
+				UNIQUE KEY video_id (video_id) 
 			) ".$wpdb->get_charset_collate().";";
 	$wpdb->query($sql);
 	
 	$sql = "CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."video_merchant_playlist (
 				player_id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
-				player_name VARCHAR(190) NOT NULL, 
+				player_name VARCHAR(255) NOT NULL, 
 				player_mode VARCHAR(20) NOT NULL, 
-				player_filter_value VARCHAR(190) NOT NULL, 
+				player_filter_value VARCHAR(255) NOT NULL, 
 				player_order_field VARCHAR(50) NOT NULL, 
 				player_order_direction VARCHAR(4) NOT NULL, 
 				player_cdate INT UNSIGNED DEFAULT 0 NOT NULL, 
 				player_mdate INT UNSIGNED DEFAULT 0 NOT NULL,
-				UNIQUE KEY player_id (player_id), 
-				INDEX idx_player_search (player_id, player_name, player_filter_value)
+				UNIQUE KEY player_id (player_id) 
 			) ".$wpdb->get_charset_collate().";";
 	$wpdb->query($sql);
 	
 	$sql = "CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."video_merchant_order (
 				order_id CHAR(32) NOT NULL, 
 				user_id INT UNSIGNED NOT NULL, 
-				order_transaction_id VARCHAR(190) NOT NULL, 
+				order_transaction_id VARCHAR(25) NOT NULL, 
 				order_status VARCHAR(30) NOT NULL, 
-				order_customer_name VARCHAR(190) NOT NULL,
-				order_customer_email VARCHAR(190) NOT NULL,
+				order_customer_name VARCHAR(255) NOT NULL,
+				order_customer_email VARCHAR(255) NOT NULL,
 				order_grand_total DECIMAL(10, 2) UNSIGNED NOT NULL,
 				video_id INT UNSIGNED NOT NULL,
 				order_license_type VARCHAR(20) NOT NULL, 
 				order_cdate INT UNSIGNED DEFAULT 0 NOT NULL, 
 				order_mdate INT UNSIGNED DEFAULT 0 NOT NULL,
-				UNIQUE KEY order_id (order_id), 
-				INDEX idx_order_search (order_id, user_id, order_transaction_id, order_status, order_customer_name, order_customer_email, video_id, order_license_type) 
+				UNIQUE KEY order_id (order_id) 
 			) ".$wpdb->get_charset_collate().";";
 	$wpdb->query($sql);
 	

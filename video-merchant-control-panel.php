@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Video Merchant
- * @version 5.0.3
+ * @version 5.0.4
  * @author Video Merchant <info@MyVideoMerchant.com>
  * @copyright (C) Copyright 2015 Video Merchant, MyVideoMerchant.com. All rights reserved.
  * @license GNU/GPL http://www.gnu.org/licenses/gpl-3.0.txt
@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 defined('ABSPATH') or die('No direct access!');
+
+video_merchant_db_install();
 
 $supportedImageTypes = array('jpg', 'jpeg', 'png', 'gif');
 $supportedVideoExtensions = array('mp4', 'ogg', 'ogv', 'webm');
@@ -76,7 +78,7 @@ if(!get_option('css_frontend_default'))
 				<form id="new_video_file_form" method="post" enctype="multipart/form-data" onsubmit="javascript: return addNewVideoFile();">
 					<fieldset>
 						<label for="video_display_name"><?php echo __('Video Display Name:', 'video-merchant'); ?></label>
-						<input type="text" name="video_display_name" id="video_display_name" value="" maxlength="190" placeholder="<?php echo __('Example Format: My Great Video', 'video-merchant'); ?>" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This is the name displayed to the guest in the frontend player. You can add things like album name, BPM, etc. This field is completely flexible.', 'video-merchant'); ?>" />
+						<input type="text" name="video_display_name" id="video_display_name" value="" maxlength="255" placeholder="<?php echo __('Example Format: My Great Video', 'video-merchant'); ?>" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This is the name displayed to the guest in the frontend player. You can add things like album name, BPM, etc. This field is completely flexible.', 'video-merchant'); ?>" />
 						<br />
 						<br />
 
@@ -427,7 +429,7 @@ if(!get_option('css_frontend_default'))
 				<form id="html_widget_form" method="post" onsubmit="javascript: return videoMerchantSaveHTMLPlayer();">
 					<fieldset>
 						<label for="playlist_name"><?php echo __('Playlist Name:', 'video-merchant'); ?></label>
-						<input type="text" name="playlist_name" id="playlist_name" value="" maxlength="190" placeholder="<?php echo __('Example Format: My Slow Jams', 'video-merchant'); ?>" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('A descriptive name for you to remember what this playlist is about. This name is used for administrative purposes only, it is never displayed to the frontend user/listener.', 'video-merchant'); ?>" />
+						<input type="text" name="playlist_name" id="playlist_name" value="" maxlength="255" placeholder="<?php echo __('Example Format: My Slow Jams', 'video-merchant'); ?>" class="text ui-widget-content ui-corner-all" /> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('A descriptive name for you to remember what this playlist is about. This name is used for administrative purposes only, it is never displayed to the frontend user/listener.', 'video-merchant'); ?>" />
 						<br />
 						<br />
 						
@@ -482,7 +484,7 @@ if(!get_option('css_frontend_default'))
 						<input type="radio" onchange="javascript: toggleCreateHTMLPlayerMode();" name="player_mode" id="player_mode_text_match" value="text_match" class="text2 ui-corner-all" /><label for="player_mode_text_match"><?php echo __('Display Video Matching Text', 'video-merchant'); ?></label> <img src="<?php echo video_merchant_make_url_protocol_less(plugins_url('images/question_mark.png', __FILE__)); ?>" width="15" height="15" align="absmiddle" border="0" alt="" title="<?php echo __('This option will display all the tracks that match the text defined below.', 'video-merchant'); ?>" />
 						<br />
 						<blockquote>
-							<label for="player_mode_text_value"><?php echo __('Match String:', 'video-merchant'); ?></label> <input type="text" name="player_mode_text_value" id="player_mode_text_value" value="" size="25" maxlength="190" placeholder="<?php echo __('Video Name', 'video-merchant'); ?>" class="text2 ui-widget-content ui-corner-all" disabled="disabled" />
+							<label for="player_mode_text_value"><?php echo __('Match String:', 'video-merchant'); ?></label> <input type="text" name="player_mode_text_value" id="player_mode_text_value" value="" size="25" maxlength="255" placeholder="<?php echo __('Video Name', 'video-merchant'); ?>" class="text2 ui-widget-content ui-corner-all" disabled="disabled" />
 						</blockquote>
 						<br />
 						<label for="player_display_order"><?php echo __('Display Order:', 'video-merchant'); ?></label> <select name="player_display_order" id="player_display_order" class="text2 ui-corner-all">
