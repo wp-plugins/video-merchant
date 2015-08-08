@@ -3,7 +3,7 @@ Contributors: VideoMerchant
 Donate link: http://www.myvideomerchant.com/#download
 Tags: sell videos, video player, html5 video player, html video player, play videos, view videos, merchant, mp4, ogv, ogg, producer, movie, director, tv, television, html
 Requires at least: 3.6.0
-Tested up to: 4.2.2
+Tested up to: 4.3
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
